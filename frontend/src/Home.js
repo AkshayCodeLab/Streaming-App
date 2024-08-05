@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
   const [content, setContent] = useState("");
-
-  console.log(localStorage.getItem("token"));
+  const token = localStorage.getItem("token");
+  console.log(token);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     fetchHomePageDetails(token);
   }, []);
 
@@ -34,11 +33,19 @@ const Home = () => {
     }
   };
 
-  return (
+  const handleSignout = () => {
+    localStorage.removeItem("token");
+    navigate("/home");
+  };
+
+  return token ? (
     <div>
       <h1>This is the home page.</h1>
+      <button onClick={handleSignout}>Sign-Out</button>
       {content && <div>{content}</div>}
     </div>
+  ) : (
+    <Navigate to="/" />
   );
 };
 
