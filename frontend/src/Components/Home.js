@@ -1,40 +1,20 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import { useNavigate, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setHomeContent } from "../Utils/contentSlice";
+import useFetcHomePage from "../Hooks/useFetchHomePage";
 
 const Home = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [content, setContent] = useState("");
+  const content = useSelector((store) => store.content.homeContent);
   const token = localStorage.getItem("token");
-  console.log(token);
 
-  useEffect(() => {
-    fetchHomePageDetails(token);
-  }, []);
-
-  const fetchHomePageDetails = async (token) => {
-    try {
-      const response = await axios.get(
-        process.env.REACT_APP_BACKEND_URL + "/home",
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
-
-      console.log(JSON.stringify(response.data));
-      setContent(response.data?.data);
-    } catch (error) {
-      console.log("This is the error : " + error);
-      localStorage.removeItem("token");
-      navigate("/");
-    }
-  };
+  useFetcHomePage(token);
 
   const handleSignout = () => {
     localStorage.removeItem("token");
+    dispatch(setHomeContent(""));
     navigate("/home");
   };
 

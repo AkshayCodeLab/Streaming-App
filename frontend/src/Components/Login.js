@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useLogin from "../Hooks/useLogin";
+import { validateForm } from "../Utils/validateForm";
+import { setLoginErr } from "../Utils/errorSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [pass, setPass] = useState("");
   const [mail, setMail] = useState("");
@@ -13,44 +16,68 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const message = validateForm(name, pass, mail);
+    if (message) {
+      dispatch(setLoginErr(message));
+      return;
+    }
     await login(name, mail, pass, isSignUp);
   };
 
   const toggleSignUp = () => setIsSignUp((prev) => !prev);
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Username"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        {isSignUp && (
+    <div className="min-h-screen flex items-center justify-center bg-[url('https://gtwallpaper.org/sites/default/files/wallpaper/246844/netflix-background-246844-2225337-5259784.png')]">
+      <div className="bg-black p-8 rounded-md shadow-md w-3/6 max-w-md">
+        <h2 className="text-3xl font-bold mb-6 text-center text-white">
+          {isSignUp ? "Sign Up" : "Sign In"}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
-            placeholder="Email"
-            value={mail}
-            onChange={(e) => setMail(e.target.value)}
+            type="text"
+            placeholder="Username"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-3 bg-gray-800 text-white border border-gray-700 rounded"
           />
+          {isSignUp && (
+            <input
+              type="email"
+              placeholder="Email"
+              value={mail}
+              onChange={(e) => setMail(e.target.value)}
+              className="w-full p-3 bg-gray-800 text-white border border-gray-700 rounded"
+            />
+          )}
+          <input
+            type="password"
+            placeholder="Password"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            className="w-full p-3 bg-gray-800 text-white border border-gray-700 rounded"
+          />
+          <button
+            type="submit"
+            className="w-full bg-red-600 text-white p-3 rounded hover:bg-red-700 transition duration-200"
+          >
+            {isSignUp ? "Sign Up" : "Sign In"}
+          </button>
+        </form>
+        {loginErr && (
+          <div className="mt-4 text-red-500 text-center">
+            <p>{loginErr}</p>
+          </div>
         )}
-        <input
-          type="password"
-          placeholder="Password"
-          value={pass}
-          onChange={(e) => setPass(e.target.value)}
-        />
-        <button type="submit">{isSignUp ? "Sign Up" : "Sign In"}</button>
-      </form>
-      {loginErr && (
-        <div>
-          <p>{loginErr}</p>
+        <div className="mt-6 text-center text-white">
+          {isSignUp ? "Already a User? " : "New User? "}
+          <button
+            type="button"
+            onClick={toggleSignUp}
+            className="text-red-500 hover:underline"
+          >
+            {isSignUp ? "Sign In" : "Sign Up"}
+          </button>
         </div>
-      )}
-      <div>
-        {isSignUp ? "Already a User? " : "New User? "}
-        <button onClick={toggleSignUp}>
-          {isSignUp ? "Sign In" : "Sign Up"}
-        </button>
       </div>
     </div>
   );
