@@ -1,95 +1,53 @@
-import React from "react";
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setLoginErr } from "../Utils/errorSlice";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import useLogin from "../Hooks/useLogin";
+
 const Login = () => {
-  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [pass, setPass] = useState("");
   const [mail, setMail] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
-  const navigate = useNavigate();
 
   const loginErr = useSelector((state) => state.error.loginErr);
-  const handleSubmit = (e) => {
+  const { login } = useLogin();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("This is the name : " + name);
-    console.log("This is the password : " + pass);
-    console.log("This is the mail : " + mail);
-
-    login(name, mail, pass);
+    await login(name, mail, pass, isSignUp);
   };
 
-  const login = async (name, mail, pass) => {
-    let url = process.env.REACT_APP_BACKEND_URL;
-
-    let bodyParams = {
-      username: name,
-      password: pass,
-    };
-    if (isSignUp) {
-      url += "/register";
-      bodyParams.email = mail;
-    } else {
-      url += "/login";
-    }
-
-    console.log("Sending POST req to : " + url);
-    console.log("The requ body is :" + JSON.stringify(bodyParams));
-
-    try {
-      const response = await axios.post(url, bodyParams);
-
-      console.log(
-        "This is the login response : " + JSON.stringify(response?.data?.token)
-      );
-      localStorage.setItem("token", response?.data?.token);
-      navigate("/Home");
-    } catch (e) {
-      const errorString = e.response?.data;
-
-      console.log("This is the login error: " + loginErr);
-      // console.log(errorString);
-      setName("");
-      setPass("");
-      errorString
-        ? dispatch(setLoginErr(e.response?.data))
-        : dispatch(setLoginErr("Bad Request"));
-      // errorString ? setErr(e.response?.data) : setErr("Bad Request");
-    }
-  };
-
-  const toggleSignUp = () => {
-    setIsSignUp(!isSignUp);
-  };
+  const toggleSignUp = () => setIsSignUp((prev) => !prev);
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <input
-          placeholder="username"
+          placeholder="Username"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         {isSignUp && (
           <input
-            placeholder="E-Mail"
+            placeholder="Email"
             value={mail}
             onChange={(e) => setMail(e.target.value)}
           />
         )}
         <input
-          placeholder="password"
+          type="password"
+          placeholder="Password"
           value={pass}
           onChange={(e) => setPass(e.target.value)}
         />
         <button type="submit">{isSignUp ? "Sign Up" : "Sign In"}</button>
       </form>
-      <div>{loginErr && <p>{loginErr}</p>}</div>
+      {loginErr && (
+        <div>
+          <p>{loginErr}</p>
+        </div>
+      )}
       <div>
-        {isSignUp ? "Already a User? " : "New User?"}
+        {isSignUp ? "Already a User? " : "New User? "}
         <button onClick={toggleSignUp}>
           {isSignUp ? "Sign In" : "Sign Up"}
         </button>
