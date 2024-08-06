@@ -2,14 +2,17 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoginErr } from "../Utils/errorSlice";
 const Login = () => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [pass, setPass] = useState("");
-  const [err, setErr] = useState("");
   const [mail, setMail] = useState("");
-  const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
 
+  const loginErr = useSelector((state) => state.error.loginErr);
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("This is the name : " + name);
@@ -47,10 +50,14 @@ const Login = () => {
     } catch (e) {
       const errorString = e.response?.data;
 
-      console.log(errorString);
+      console.log("This is the login error: " + loginErr);
+      // console.log(errorString);
       setName("");
       setPass("");
-      errorString ? setErr(e.response?.data) : setErr("Bad Request");
+      errorString
+        ? dispatch(setLoginErr(e.response?.data))
+        : dispatch(setLoginErr("Bad Request"));
+      // errorString ? setErr(e.response?.data) : setErr("Bad Request");
     }
   };
 
@@ -80,7 +87,7 @@ const Login = () => {
         />
         <button type="submit">{isSignUp ? "Sign Up" : "Sign In"}</button>
       </form>
-      <div>{err && <p>{err}</p>}</div>
+      <div>{loginErr && <p>{loginErr}</p>}</div>
       <div>
         {isSignUp ? "Already a User? " : "New User?"}
         <button onClick={toggleSignUp}>
