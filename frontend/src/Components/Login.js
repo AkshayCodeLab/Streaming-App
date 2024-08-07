@@ -24,11 +24,14 @@ const Login = () => {
     await login(name, mail, pass, isSignUp);
   };
 
-  const toggleSignUp = () => setIsSignUp((prev) => !prev);
+  const toggleSignUp = () => {
+    setIsSignUp((prev) => !prev);
+    dispatch(setLoginErr(""));
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[url('https://gtwallpaper.org/sites/default/files/wallpaper/246844/netflix-background-246844-2225337-5259784.png')]">
-      <div className="bg-black p-8 rounded-md shadow-md w-3/6 max-w-md">
+      <div className="bg-black p-8 rounded-md shadow-md w-3/6 max-w-md opacity-95">
         <h2 className="text-3xl font-bold mb-6 text-center text-white">
           {isSignUp ? "Sign Up" : "Sign In"}
         </h2>
@@ -73,7 +76,7 @@ const Login = () => {
           <button
             type="button"
             onClick={toggleSignUp}
-            className="text-red-500 hover:underline"
+            className="text-blue-400 hover:underline"
           >
             {isSignUp ? "Sign In" : "Sign Up"}
           </button>
