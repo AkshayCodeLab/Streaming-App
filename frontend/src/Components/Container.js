@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CorousalCard from "./CorousalCard";
 import TrailerVideo from "./TrailerVideo";
 const Container = () => {
@@ -7,26 +7,31 @@ const Container = () => {
   const [ei, setEi] = useState(5);
   const [si, setSi] = useState(data.length - 1);
   const [trailerUrl, setTrailerUrl] = useState(initialDataArr[2].videoUrl);
+
   const handleLeft = () => {
     const newDataArr = displayArray.slice(1);
     newDataArr.push(data[ei]);
-
-    ei === data.length - 1 ? setEi(0) : setEi(ei + 1);
+    setEi(ei === data.length - 1 ? 0 : ei + 1);
     setDisplayArray(newDataArr);
   };
 
   const handleRight = () => {
     const newDataArr = displayArray.slice(0, 4);
     newDataArr.unshift(data[si]);
-    si === 0 ? setSi(data.length - 1) : setSi(si - 1);
+    setSi(si === 0 ? data.length - 1 : si - 1);
     setDisplayArray(newDataArr);
   };
+
+  useEffect(() => {
+    setTrailerUrl(displayArray[2].videoUrl);
+  }, [displayArray]);
+
   return (
-    <div className="relative bg-black">
+    <div className="absolute bg-black -mt-30">
       <div className="relative z-10">
-        <TrailerVideo trailerUrl={trailerUrl} />
+        <TrailerVideo key={trailerUrl} trailerUrl={trailerUrl} />
       </div>
-      <div className="relative -mt-20 z-20">
+      <div className="absolute -mt-5 z-20">
         <div className="flex">
           {displayArray.map((element, index) => (
             <CorousalCard key={index} element={element} index={index} />
