@@ -9,7 +9,7 @@ const Home = () => {
   useFetcHomePage(token);
 
   return token ? (
-    <div>
+    <div className="relative bg-black">
       <Header />
       <Container />
     </div>

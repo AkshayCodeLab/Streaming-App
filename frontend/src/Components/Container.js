@@ -27,11 +27,12 @@ const Container = () => {
   }, [displayArray]);
 
   return (
-    <div className="absolute bg-black -mt-30">
-      <div className="relative z-10">
+    <div className="absolute bg-black">
+      <div className="relative z-10 ">
         <TrailerVideo key={trailerUrl} trailerUrl={trailerUrl} />
       </div>
-      <div className="absolute -mt-5 z-20">
+
+      <div className="absolute bottom-0 left-0 w-full z-20 -mb-16">
         <div className="flex">
           {displayArray.map((element, index) => (
             <CorousalCard key={index} element={element} index={index} />

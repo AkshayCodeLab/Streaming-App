@@ -15,17 +15,17 @@ const Header = () => {
     navigate("/home");
   };
   return (
-    <div className="flex justify-between h-15 w-full bg-black absolute z-50">
+    <div className="flex justify-between items-center h-15 w-full bg-gradient-to-b from-black via-black/75 to-transparent fixed top-0 z-50 px-4 py-2">
       <img
-        className="h-14"
-        src="https://1000logos.net/wp-content/uploads/2017/05/Netflix-symbol.jpg"
+        className="h-10"
+        src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
         alt="logo"
       />
       <button
         onClick={handleSignout}
-        className="bg-red-700 text-white px-2 py-1 rounded-sm h-10 mt-2 mr-2"
+        className="bg-red-700 text-white px-3 py-1 rounded h-10"
       >
-        Sign-Out
+        Sign Out
       </button>
     </div>
   );
