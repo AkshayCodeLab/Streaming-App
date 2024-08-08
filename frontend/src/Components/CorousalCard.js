@@ -1,7 +1,7 @@
 import React from "react";
 
 const CorousalCard = ({ element, index }) => {
-  const { img, name, type, videoUrl } = element;
+  const { img, name, type } = element;
 
   return (
     <div

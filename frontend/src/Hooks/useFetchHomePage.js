@@ -22,7 +22,6 @@ const useFetcHomePage = (token) => {
         }
       );
 
-      console.log(JSON.stringify(response.data));
       dispatch(setHomeContent(response.data?.data));
     } catch (error) {
       console.log("This is the error : " + error);
